@@ -33,7 +33,7 @@ func main() {
 		zap.Int("delayMillis", *delayMillis),
 	)
 
-	if err := scraper.ScrapeForum(c, *startURL, *pageLimit); err != nil {
+	if _, err := scraper.ScrapeForum(c, *startURL, *pageLimit); err != nil {
 		util.Logger.Fatal("Failed to scrape forum", zap.Error(err))
 	}
 

@@ -9,7 +9,7 @@ import (
 	"go.uber.org/zap"
 )
 
-func ScrapeForum(c *colly.Collector, startURL string, pageLimit int) error {
+func ScrapeForum(c *colly.Collector, startURL string, pageLimit int) ([]database.Post, error) {
 	var posts []database.Post
 
 	c.OnRequest(func(r *colly.Request) {
@@ -41,8 +41,7 @@ func ScrapeForum(c *colly.Collector, startURL string, pageLimit int) error {
 		}
 
 		util.Logger.Info("Scraped",
-			zap.String("views", e.ChildText("td.views > div > span")),
-			zap.String("threads", e.ChildText("td.thread > div.thread_title")),
+			zap.Any("post", post),
 		)
 	})
 
@@ -56,5 +55,5 @@ func ScrapeForum(c *colly.Collector, startURL string, pageLimit int) error {
 	c.Wait()
 
 	util.Logger.Info("Scraping completed successfully", zap.Int("num_posts", len(posts)))
-	return nil
+	return posts, nil
 }
