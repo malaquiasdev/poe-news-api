@@ -33,8 +33,15 @@ func main() {
 		zap.Int("delayMillis", *delayMillis),
 	)
 
-	if _, err := scraper.ScrapeForum(c, *startURL, *pageLimit); err != nil {
+	posts, err := scraper.ScrapeForum(c, *startURL, *pageLimit)
+	if err != nil {
 		util.Logger.Fatal("Failed to scrape forum", zap.Error(err))
+	}
+
+	// TODO: Add a way to save the scraped data to a database
+
+	if _, err := scraper.ScrapeContent(c, &posts); err != nil {
+		util.Logger.Fatal("Failed to scrape content", zap.Error(err))
 	}
 
 	util.Logger.Info("Scraping session finished")
